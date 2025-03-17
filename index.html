@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prise de RDV - Psychologue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            width: 90%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        function verifierEmail() {
+            var email = document.getElementById("email").value;
+            if (email.endsWith("@mbs-education.com")) {
+                document.getElementById("calendrier").style.display = "block";
+            } else {
+                alert("Seules les adresses @mbs-education.com sont autorisées.");
+            }
+        }
+
+        function reserver() {
+            var date = document.getElementById("date").value;
+            var heure = document.getElementById("heure").value;
+            if (date && heure) {
+                document.getElementById("confirmation").innerHTML = "Votre rendez-vous est réservé pour le " + date + " à " + heure;
+                document.getElementById("confirmation").style.display = "block";
+            } else {
+                alert("Veuillez choisir une date et une heure.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <img src="WhatsApp Image 2025-02-26 à 15.04.22_f9c83e89.jpg" alt="MBS Mental Health Logo" class="logo">
+        <h1>Prise de Rendez-vous - Psychologue</h1>
+        <p>Réservez un créneau pour une consultation.</p>
+        
+        <h2>Connexion</h2>
+        <input type="email" id="email" placeholder="Entrez votre email @mbs-education.com">
+        <button onclick="verifierEmail()">Continuer</button>
+        
+        <div id="calendrier" style="display:none;">
+            <h2>Choisissez un créneau</h2>
+            <input type="date" id="date">
+            <input type="time" id="heure">
+            <button onclick="reserver()">Réserver</button>
+        </div>
+        
+        <div id="confirmation" style="display:none; margin-top: 20px; font-weight: bold; color: green;"></div>
+    </div>
+</body>
+</html>
