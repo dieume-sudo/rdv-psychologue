@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prise de RDV - Psychologue</title>
+    <title>MBS Mental Health</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -38,8 +38,20 @@
             max-width: 150px;
             margin-bottom: 20px;
         }
+        .hidden {
+            display: none;
+        }
     </style>
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            afficherRendezVous();
+        });
+
+        function afficherReservation() {
+            document.getElementById("accueil").classList.add("hidden");
+            document.getElementById("reservation").classList.remove("hidden");
+        }
+
         function verifierEmail() {
             var email = document.getElementById("email").value;
             if (email.endsWith("@mbs-education.com")) {
@@ -53,32 +65,66 @@
             var date = document.getElementById("date").value;
             var heure = document.getElementById("heure").value;
             if (date && heure) {
+                var rdv = { date: date, heure: heure };
+                var rdvs = JSON.parse(localStorage.getItem("rdvs")) || [];
+                rdvs.push(rdv);
+                localStorage.setItem("rdvs", JSON.stringify(rdvs));
+                afficherRendezVous();
                 document.getElementById("confirmation").innerHTML = "Votre rendez-vous est réservé pour le " + date + " à " + heure;
                 document.getElementById("confirmation").style.display = "block";
+                setTimeout(() => {
+                    document.getElementById("accueil").classList.remove("hidden");
+                    document.getElementById("reservation").classList.add("hidden");
+                }, 2000);
             } else {
                 alert("Veuillez choisir une date et une heure.");
             }
+        }
+
+        function afficherRendezVous() {
+            var listeRdv = document.getElementById("liste-rdv");
+            var rdvs = JSON.parse(localStorage.getItem("rdvs")) || [];
+            listeRdv.innerHTML = rdvs.length > 0 ? "" : "<p>Aucun rendez-vous pour le moment.</p>";
+            rdvs.forEach((rdv, index) => {
+                listeRdv.innerHTML += `<p>Rendez-vous : ${rdv.date} à ${rdv.heure} <button onclick="annulerRdv(${index})">Annuler</button></p>`;
+            });
+        }
+
+        function annulerRdv(index) {
+            var rdvs = JSON.parse(localStorage.getItem("rdvs")) || [];
+            rdvs.splice(index, 1);
+            localStorage.setItem("rdvs", JSON.stringify(rdvs));
+            afficherRendezVous();
         }
     </script>
 </head>
 <body>
     <div class="container">
-        <img src="WhatsApp Image 2025-02-26 à 15.04.22_f9c83e89.jpg" alt="MBS Mental Health Logo" class="logo">
-        <h1>Prise de Rendez-vous - Psychologue</h1>
-        <p>Réservez un créneau pour une consultation.</p>
+        <img src="logo.jpg" alt="MBS Mental Health Logo" class="logo">
         
-        <h2>Connexion</h2>
-        <input type="email" id="email" placeholder="Entrez votre email @mbs-education.com">
-        <button onclick="verifierEmail()">Continuer</button>
-        
-        <div id="calendrier" style="display:none;">
-            <h2>Choisissez un créneau</h2>
-            <input type="date" id="date">
-            <input type="time" id="heure">
-            <button onclick="reserver()">Réserver</button>
+        <!-- Page d'accueil -->
+        <div id="accueil">
+            <h1>Bienvenue sur MBS Mental Health</h1>
+            <p>Voici les rendez-vous à venir :</p>
+            <div id="liste-rdv"></div>
+            <button onclick="afficherReservation()">Prendre un rendez-vous</button>
         </div>
         
-        <div id="confirmation" style="display:none; margin-top: 20px; font-weight: bold; color: green;"></div>
+        <!-- Page de réservation -->
+        <div id="reservation" class="hidden">
+            <h2>Connexion</h2>
+            <input type="email" id="email" placeholder="Entrez votre email @mbs-education.com">
+            <button onclick="verifierEmail()">Continuer</button>
+            
+            <div id="calendrier" style="display:none;">
+                <h2>Choisissez un créneau</h2>
+                <input type="date" id="date">
+                <input type="time" id="heure">
+                <button onclick="reserver()">Réserver</button>
+            </div>
+            
+            <div id="confirmation" style="display:none; margin-top: 20px; font-weight: bold; color: green;"></div>
+        </div>
     </div>
 </body>
 </html>
